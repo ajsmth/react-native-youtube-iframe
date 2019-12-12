@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
 } from 'react-native';
 
 import {
@@ -24,22 +25,52 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import {MyLib} from 'my-library';
+import {Player} from 'my-library';
 
 function App() {
+  const [playerState, setPlayerState] = React.useState({
+    id: '',
+    duration: 0,
+    playlistIndex: -1,
+    loaded: false,
+    currentTime: 0,
+    videoURL: '',
+    playerState: -1,
+    percentLoaded: 0,
+  });
+
+  function pausePlayer() {
+    setPlayerState(state => {
+      return {
+        ...state,
+        playerState: 2,
+      };
+    });
+  }
+
+  function toggleCaptions() {
+    setPlayerState(state => {
+      return {
+        ...state,
+        captions: !state.captions,
+      };
+    });
+  }
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <Player
+            id="10tXmE1IXw0"
+            playerState={playerState}
+            onPlayerChange={setPlayerState}
+          />
 
-          <View style={styles.body}>
-            <MyLib />
-          </View>
-        </ScrollView>
+          <Button title="Pause" onPress={pausePlayer} />
+          <Button title="Captions" onPress={toggleCaptions} />
+        </View>
       </SafeAreaView>
     </>
   );
